@@ -1,6 +1,8 @@
 #pragma once
 
 #include "GraphicsViewController.h"
+#include "SegmentsController.h"
+#include "SegmentsModel.h"
 
 #include <QGraphicsScene>
 #include <QMainWindow>
@@ -19,17 +21,26 @@ class MainWindow : public QMainWindow
 
   private slots:
     void on_actionOpen_image_triggered();
+    void on_actionAppend_segment_triggered();
+    void on_actionRemove_segment_triggered();
+    void on_actionSave_segments_triggered();
+    void on_actionOpen_segments_triggered();
 
   private:
     void restoreState();
     void saveState() const;
 
     void loadImage();
+    void loadSegments();
 
     Ui::MainWindow * ui;
     GraphicsViewController * _graphicsViewController;
     QString _imageDir;
-    QString _imageFilename;
+    QString _imageFilename = "://resources/archimedes.jpg";
+    QString _segmentsDir;
+    QString _segmentsFileName = ":/resources/segments.csv";
     QGraphicsScene _scene;
     QGraphicsPixmapItem * _imageItem = nullptr;
+    SegmentsController _segmentsController;
+    SegmentsModel _segmentsModel;
 };

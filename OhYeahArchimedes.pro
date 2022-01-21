@@ -2,7 +2,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++14
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -13,12 +13,18 @@ INCLUDEPATH += \
 
 SOURCES += \
     src/GraphicsViewController.cpp \
+    src/Segment.cpp \
+    src/SegmentsController.cpp \
+    src/SegmentsModel.cpp \
     src/main.cpp \
     src/MainWindow.cpp
 
 HEADERS += \
     src/GraphicsViewController.h \
-    src/MainWindow.h
+    src/MainWindow.h \
+    src/Segment.h \
+    src/SegmentsController.h \
+    src/SegmentsModel.h
 
 FORMS += \
     src/MainWindow.ui
@@ -27,3 +33,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resources.qrc

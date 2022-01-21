@@ -16,16 +16,32 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QGraphicsView" name="graphicsView">
-      <property name="renderHints">
-       <set>QPainter::Antialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing</set>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
       </property>
-      <property name="dragMode">
-       <enum>QGraphicsView::ScrollHandDrag</enum>
-      </property>
-      <property name="transformationAnchor">
-       <enum>QGraphicsView::AnchorUnderMouse</enum>
-      </property>
+      <widget class="QGraphicsView" name="graphicsView">
+       <property name="renderHints">
+        <set>QPainter::Antialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing</set>
+       </property>
+       <property name="dragMode">
+        <enum>QGraphicsView::ScrollHandDrag</enum>
+       </property>
+       <property name="transformationAnchor">
+        <enum>QGraphicsView::AnchorUnderMouse</enum>
+       </property>
+      </widget>
+      <widget class="QTableView" name="tableView">
+       <property name="alternatingRowColors">
+        <bool>true</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -46,7 +62,15 @@
     <addaction name="actionOpen_image"/>
     <addaction name="actionOpen_segments"/>
    </widget>
+   <widget class="QMenu" name="menuActions">
+    <property name="title">
+     <string>Actions</string>
+    </property>
+    <addaction name="actionAppend_segment"/>
+    <addaction name="actionRemove_segment"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuActions"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -61,6 +85,10 @@
    </attribute>
    <addaction name="actionOpen_image"/>
    <addaction name="actionOpen_segments"/>
+   <addaction name="actionSave_segments"/>
+   <addaction name="separator"/>
+   <addaction name="actionAppend_segment"/>
+   <addaction name="actionRemove_segment"/>
   </widget>
   <action name="actionOpen_image">
    <property name="text">
@@ -70,6 +98,21 @@
   <action name="actionOpen_segments">
    <property name="text">
     <string>Open segments</string>
+   </property>
+  </action>
+  <action name="actionSave_segments">
+   <property name="text">
+    <string>Save segments</string>
+   </property>
+  </action>
+  <action name="actionAppend_segment">
+   <property name="text">
+    <string>Append segment</string>
+   </property>
+  </action>
+  <action name="actionRemove_segment">
+   <property name="text">
+    <string>Remove segment</string>
    </property>
   </action>
  </widget>

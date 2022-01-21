@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/archimedes.jpg</file>
+        <file>resources/segments.csv</file>
+    </qresource>
+</RCC>
