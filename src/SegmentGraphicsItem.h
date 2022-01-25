@@ -12,6 +12,9 @@ class SegmentGraphicsItem : public QGraphicsLineItem
     QLineF line() const;
     void setLine( const QLineF & line );
 
+    // QGraphicsItem interface
+    QPainterPath shape() const override;
+
   protected:
     // QGraphicsItem interface
     QVariant itemChange( GraphicsItemChange change, const QVariant & value ) override;

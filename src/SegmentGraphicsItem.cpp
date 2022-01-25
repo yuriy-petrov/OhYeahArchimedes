@@ -39,6 +39,13 @@ void SegmentGraphicsItem::setLine( const QLineF & line )
     QGraphicsLineItem::setLine( line.translated( pos() ) );
 }
 
+QPainterPath SegmentGraphicsItem::shape() const
+{
+    auto pen = this->pen();
+    pen.setWidth( 10 );
+    return QPainterPathStroker( pen ).createStroke( QGraphicsLineItem::shape() );
+}
+
 QVariant SegmentGraphicsItem::itemChange( GraphicsItemChange change, const QVariant & value )
 {
     if ( change == QGraphicsItem::ItemPositionHasChanged ) {
