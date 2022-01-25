@@ -14,6 +14,7 @@ INCLUDEPATH += \
 SOURCES += \
     src/GraphicsViewController.cpp \
     src/Segment.cpp \
+    src/SegmentGraphicsItem.cpp \
     src/SegmentsController.cpp \
     src/SegmentsModel.cpp \
     src/main.cpp \
@@ -23,6 +24,7 @@ HEADERS += \
     src/GraphicsViewController.h \
     src/MainWindow.h \
     src/Segment.h \
+    src/SegmentGraphicsItem.h \
     src/SegmentsController.h \
     src/SegmentsModel.h
 

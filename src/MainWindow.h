@@ -41,6 +41,6 @@ class MainWindow : public QMainWindow
     QString _segmentsFileName = ":/resources/segments.csv";
     QGraphicsScene _scene;
     QGraphicsPixmapItem * _imageItem = nullptr;
-    SegmentsController _segmentsController;
     SegmentsModel _segmentsModel;
+    SegmentsController _segmentsController;
 };

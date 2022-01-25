@@ -21,7 +21,7 @@ MainWindow::MainWindow( QWidget * parent )
   , ui( new Ui::MainWindow )
   , _imageDir( qApp->applicationDirPath() )
   , _segmentsDir( qApp->applicationDirPath() )
-  , _segmentsModel( &_segmentsController )
+  , _segmentsController( &_scene, &_segmentsModel )
 {
     ui->setupUi(this);
     ui->graphicsView->setScene( &_scene );
@@ -60,12 +60,12 @@ void MainWindow::on_actionOpen_image_triggered()
 
 void MainWindow::on_actionAppend_segment_triggered()
 {
-    _segmentsModel.appendSegment();
+    _segmentsController.append();
 }
 
 void MainWindow::on_actionRemove_segment_triggered()
 {
-    _segmentsModel.removeSegment( ui->tableView->selectionModel()->selectedRows().first() );
+    _segmentsController.remove( ui->tableView->selectionModel()->selectedRows().first().row() );
 }
 
 void MainWindow::on_actionSave_segments_triggered()
@@ -91,10 +91,10 @@ void MainWindow::restoreState()
     QSettings s;
     restoreGeometry( s.value( ParamGeometry, saveGeometry() ).toByteArray() );
     ui->splitter->restoreState( s.value( ParamSplitter, ui->splitter->saveState() ).toByteArray() );
-    _imageDir      = s.value( ParamImageDir, _imageDir ).toString();
-    _imageFilename = s.value( ParamImage, _imageFilename ).toString();
-    _segmentsDir   = s.value( ParamSegmentsDir, _segmentsDir ).toString();
-    //    _segmentsFileName = s.value( ParamSegments, _segmentsFileName ).toString();
+    _imageDir         = s.value( ParamImageDir, _imageDir ).toString();
+    _imageFilename    = s.value( ParamImage, _imageFilename ).toString();
+    _segmentsDir      = s.value( ParamSegmentsDir, _segmentsDir ).toString();
+    _segmentsFileName = s.value( ParamSegments, _segmentsFileName ).toString();
 }
 
 void MainWindow::saveState() const

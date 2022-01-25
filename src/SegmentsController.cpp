@@ -1,4 +1,5 @@
 #include "SegmentsController.h"
+#include "SegmentGraphicsItem.h"
 
 #include <QFile>
 #include <QLoggingCategory>
@@ -7,14 +8,17 @@ namespace {
 Q_LOGGING_CATEGORY( LOG, "SegmentsController" )
 }
 
-SegmentsController::SegmentsController( QObject * parent )
+SegmentsController::SegmentsController( QGraphicsScene * scene, SegmentsModel * model, QObject * parent )
   : QObject( parent )
-{
-    
+  , _scene( scene )
+  , _model( model )
+{   
 }
 
 void SegmentsController::loadFromCsv( const QString & fileName )
 {
+    _model->clear();
+
     QFile file( fileName );
     if ( file.open( QIODevice::ReadOnly ) ) {
         int lineNum = 0;
@@ -40,8 +44,6 @@ void SegmentsController::loadFromCsv( const QString & fileName )
     } else {
         qCCritical( LOG ).noquote() << file.errorString() << ":" << file.fileName();
     }
-
-    emit loaded();
 }
 
 void SegmentsController::saveToCsv( const QString & fileName )
@@ -72,11 +74,19 @@ Segment * SegmentsController::append( const QLineF & line )
         }
     } );
 
+    _scene->addItem( new SegmentGraphicsItem( ptr ) );
+
+    _model->insertRows( _model->rowCount(), 1 );
+    _model->setData(
+      _model->index( _model->rowCount() - 1, 0 ), QVariant::fromValue( ptr ), SegmentsModel::SegmentRole );
+
     return ptr;
 }
 
 void SegmentsController::remove( uint index )
 {
+    _model->removeRows( index, 1 );
+
     if ( index < _segments.size() ) {
         _segments.erase( _segments.begin() + index );
     }
