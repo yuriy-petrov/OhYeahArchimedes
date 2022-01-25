@@ -24,7 +24,7 @@ QVariant SegmentsModel::headerData(int section, Qt::Orientation orientation, int
                 case Column::Y1:
                     return "y1";
                 case Column::Y2:
-                    return "y1";
+                    return "y2";
             }
         }
     }
