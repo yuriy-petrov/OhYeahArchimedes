@@ -8,6 +8,7 @@ class SegmentGraphicsItem : public QGraphicsLineItem
 {
   public:
     SegmentGraphicsItem( Segment * segment );
+    ~SegmentGraphicsItem();
 
     QLineF line() const;
     void setLine( const QLineF & line );

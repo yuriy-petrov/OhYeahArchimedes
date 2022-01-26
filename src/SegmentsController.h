@@ -6,29 +6,29 @@
 #include <QGraphicsScene>
 #include <QLineF>
 #include <QList>
-#include <QObject>
+#include <QTableView>
 
-class SegmentsController : public QObject
+class SegmentsController
 {
-    Q_OBJECT
-
   public:
-    SegmentsController( QGraphicsScene * scene, SegmentsModel * model, QObject * parent = nullptr );
+    SegmentsController( QGraphicsScene * scene, QTableView * tableView, SegmentsModel * model );
 
     void loadFromCsv( const QString & fileName );
     void saveToCsv( const QString & fileName );
 
     Segment * append( const QLineF & line = {} );
     void remove( uint index );
-
     const std::vector<Segment::Ptr> & segments() const;
+
+    void select( int index );
+    void clearSelection();
 
   signals:
     void changed( uint index );
 
   private:
     QGraphicsScene * _scene;
+    QTableView * _view;
     SegmentsModel * _model;
     std::vector<Segment::Ptr> _segments;
 };
-

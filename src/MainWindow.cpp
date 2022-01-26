@@ -6,6 +6,7 @@
 #include <QGraphicsPixmapItem>
 #include <QScrollBar>
 #include <QSettings>
+#include <QtDebug>
 
 namespace {
 auto const ParamGeometry    = "geometry";
@@ -21,13 +22,13 @@ MainWindow::MainWindow( QWidget * parent )
   , ui( new Ui::MainWindow )
   , _imageDir( qApp->applicationDirPath() )
   , _segmentsDir( qApp->applicationDirPath() )
-  , _segmentsController( &_scene, &_segmentsModel )
 {
     ui->setupUi(this);
     ui->graphicsView->setScene( &_scene );
     ui->tableView->setModel( &_segmentsModel );
-
     ui->tableView->horizontalHeader()->setSectionResizeMode( QHeaderView::Stretch );
+
+    _segmentsController.reset( new SegmentsController( &_scene, ui->tableView, &_segmentsModel ) );
 
     _graphicsViewController = new GraphicsViewController( ui->graphicsView, this );
 
@@ -60,19 +61,19 @@ void MainWindow::on_actionOpen_image_triggered()
 
 void MainWindow::on_actionAppend_segment_triggered()
 {
-    _segmentsController.append();
+    _segmentsController->append();
 }
 
 void MainWindow::on_actionRemove_segment_triggered()
 {
-    _segmentsController.remove( ui->tableView->selectionModel()->selectedRows().first().row() );
+    _segmentsController->remove( ui->tableView->selectionModel()->selectedRows().first().row() );
 }
 
 void MainWindow::on_actionSave_segments_triggered()
 {
     auto fileName = QFileDialog::getSaveFileName( this, "Save segments", _segmentsFileName, "CSV files (*.csv)" );
     if ( !fileName.isEmpty() ) {
-        _segmentsController.saveToCsv( fileName );
+        _segmentsController->saveToCsv( fileName );
     }
 }
 
@@ -120,5 +121,5 @@ void MainWindow::loadImage()
 
 void MainWindow::loadSegments()
 {
-    _segmentsController.loadFromCsv( _segmentsFileName );
+    _segmentsController->loadFromCsv( _segmentsFileName );
 }

@@ -8,11 +8,19 @@ namespace {
 Q_LOGGING_CATEGORY( LOG, "SegmentsController" )
 }
 
-SegmentsController::SegmentsController( QGraphicsScene * scene, SegmentsModel * model, QObject * parent )
-  : QObject( parent )
-  , _scene( scene )
+SegmentsController::SegmentsController( QGraphicsScene * scene, QTableView * tableView, SegmentsModel * model )
+  : _scene( scene )
+  , _view( tableView )
   , _model( model )
-{   
+{
+    QObject::connect( tableView->selectionModel(), &QItemSelectionModel::selectionChanged, [this]() {
+        auto rows = _view->selectionModel()->selectedRows();
+        if ( rows.isEmpty() ) {
+            clearSelection();
+        } else {
+            select( rows.first().row() );
+        }
+    } );
 }
 
 void SegmentsController::loadFromCsv( const QString & fileName )
@@ -66,19 +74,23 @@ Segment * SegmentsController::append( const QLineF & line )
     _segments.push_back( std::move( segment ) );
     auto ptr = _segments.back().get();
 
-    connect( ptr, &Segment::changed, this, [this, ptr]() {
-        auto it = std::find_if(
-          _segments.cbegin(), _segments.cend(), [ptr]( const auto & segment ) { return segment.get() == ptr; } );
-        if ( it != _segments.cend() ) {
-            emit changed( std::distance( _segments.cbegin(), it ) );
-        }
-    } );
-
     _scene->addItem( new SegmentGraphicsItem( ptr ) );
 
     _model->insertRows( _model->rowCount(), 1 );
     _model->setData(
       _model->index( _model->rowCount() - 1, 0 ), QVariant::fromValue( ptr ), SegmentsModel::SegmentRole );
+
+    QObject::connect( ptr, &Segment::selectionChanged, [ptr, this]() {
+        auto it = std::find_if(
+          _segments.cbegin(), _segments.cend(), [ptr]( auto const & segment ) { return segment.get() == ptr; } );
+        if ( it != _segments.cend() ) {
+            QSignalBlocker sb( ptr );
+            _view->selectionModel()->select(
+              _model->index( std::distance( _segments.cbegin(), it ), 0 ),
+              ( it->get()->isSelected() ? QItemSelectionModel::Select : QItemSelectionModel::Deselect ) |
+                QItemSelectionModel::Rows );
+        }
+    } );
 
     return ptr;
 }
@@ -95,4 +107,20 @@ void SegmentsController::remove( uint index )
 const std::vector<Segment::Ptr> & SegmentsController::segments() const
 {
     return _segments;
+}
+
+void SegmentsController::select( int index )
+{
+    for ( auto it = _segments.cbegin(); it != _segments.cend(); ++it ) {
+        it->get()->setSelected( std::distance( _segments.cbegin(), it ) == index );
+        _view->selectionModel()->select(
+          _model->index( std::distance( _segments.cbegin(), it ), 0 ),
+          ( it->get()->isSelected() ? QItemSelectionModel::Select : QItemSelectionModel::Deselect ) |
+            QItemSelectionModel::Rows );
+    }
+}
+
+void SegmentsController::clearSelection()
+{
+    select( -1 );
 }

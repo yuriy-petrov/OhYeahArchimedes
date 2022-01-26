@@ -42,5 +42,5 @@ class MainWindow : public QMainWindow
     QGraphicsScene _scene;
     QGraphicsPixmapItem * _imageItem = nullptr;
     SegmentsModel _segmentsModel;
-    SegmentsController _segmentsController;
+    std::unique_ptr<SegmentsController> _segmentsController;
 };
