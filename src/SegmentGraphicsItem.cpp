@@ -17,14 +17,14 @@ Q_LOGGING_CATEGORY( LOG, "SegmentGraphicsItem" )
 SegmentGraphicsItem::SegmentGraphicsItem( Segment * segment )
   : _segment( segment )
 {
-    setZValue( 100 );
-    setFlag( QGraphicsItem::ItemIsMovable );
+    setZValue( 100 );                        // display lines on top of the image
+    setFlag( QGraphicsItem::ItemIsMovable ); // moving lines with the mouse
     setFlag( QGraphicsItem::ItemIsSelectable );
     setFlag( QGraphicsItem::ItemSendsScenePositionChanges );
     setCursor( Qt::PointingHandCursor );
     setAcceptHoverEvents( true );
     QPen pen( Qt::black, 2.0 );
-    pen.setCosmetic( true );
+    pen.setCosmetic( true ); // lines do not change thickness when scaled
     setPen( pen );
     QObject::connect( segment, &Segment::changed, [this]() {
         setLine( _segment->line() );
@@ -75,6 +75,7 @@ QVariant SegmentGraphicsItem::itemChange( GraphicsItemChange change, const QVari
 
 void SegmentGraphicsItem::hoverEnterEvent( QGraphicsSceneHoverEvent * event )
 {
+    // displaying line coordinates when hovering the mouse pointer
     QToolTip::showText( event->screenPos(),
                         QString( "(%1, %2) (%3, %4)" )
                           .arg( _segment->line().p1().x() )
@@ -85,5 +86,6 @@ void SegmentGraphicsItem::hoverEnterEvent( QGraphicsSceneHoverEvent * event )
 
 void SegmentGraphicsItem::hoverLeaveEvent( QGraphicsSceneHoverEvent * event )
 {
+    Q_UNUSED( event );
     QToolTip::hideText();
 }

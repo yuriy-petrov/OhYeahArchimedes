@@ -24,12 +24,14 @@ MainWindow::MainWindow( QWidget * parent )
   , _segmentsDir( qApp->applicationDirPath() )
 {
     ui->setupUi(this);
+    ui->graphicsView->setDragMode( QGraphicsView::ScrollHandDrag ); // scrolling the scene
     ui->graphicsView->setScene( &_scene );
     ui->tableView->setModel( &_segmentsModel );
     ui->tableView->horizontalHeader()->setSectionResizeMode( QHeaderView::Stretch );
 
     _segmentsController.reset( new SegmentsController( &_scene, ui->tableView, &_segmentsModel ) );
 
+    // zooming the scene, ignoring scrollbars
     _graphicsViewController = new GraphicsViewController( ui->graphicsView, this );
 
     restoreState();
